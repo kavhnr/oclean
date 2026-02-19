@@ -1,0 +1,16 @@
+[package]
+name = "oclean"
+version = "0.1.0"
+edition = "2024"
+description = "Process-cleanup wrapper for opencode sessions"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/kavhnr/oclean"
+homepage = "https://github.com/kavhnr/oclean"
+documentation = "https://docs.rs/oclean"
+keywords = ["opencode", "process", "cli", "cleanup"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+nix = { version = "0.30.1", features = ["process", "signal"] }
+signal-hook = "0.3.18"

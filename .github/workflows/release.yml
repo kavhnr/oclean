@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            triple: x86_64-unknown-linux-gnu
+          - os: macos-13
+            triple: x86_64-apple-darwin
+          - os: macos-14
+            triple: aarch64-apple-darwin
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          name="oclean-v${version}-${{ matrix.triple }}"
+          mkdir -p dist
+          cp target/release/oclean "dist/oclean"
+          tar -C dist -czf "${name}.tar.gz" oclean
+          shasum -a 256 "${name}.tar.gz" > "${name}.tar.gz.sha256"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: oclean-${{ matrix.triple }}
+          path: |
+            oclean-v*.tar.gz
+            oclean-v*.tar.gz.sha256
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Flatten artifact directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          find artifacts -type f -maxdepth 2 -exec cp {} release/ \;
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
