@@ -6,16 +6,15 @@ class Oclean < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/kavhnr/oclean/releases/download/v0.1.0/oclean-v0.1.0-aarch64-apple-darwin.tar.gz"
-      sha256 "<SHA256_AARCH64_APPLE_DARWIN>"
+      sha256 "083c6c8bd086a3e474235e2ad1a5a0204a73251df5dfa8fb8009c23ca9b66a00"
     else
-      url "https://github.com/kavhnr/oclean/releases/download/v0.1.0/oclean-v0.1.0-x86_64-apple-darwin.tar.gz"
-      sha256 "<SHA256_X86_64_APPLE_DARWIN>"
+      odie "x86_64 macOS package is not published yet"
     end
   end
 
   on_linux do
     url "https://github.com/kavhnr/oclean/releases/download/v0.1.0/oclean-v0.1.0-x86_64-unknown-linux-gnu.tar.gz"
-    sha256 "<SHA256_X86_64_UNKNOWN_LINUX_GNU>"
+    sha256 "495f121f96ec93a9d9de661c701ed6807da36d575dc135b9929ffcb59fabe456"
   end
 
   def install
