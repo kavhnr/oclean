@@ -1,6 +1,6 @@
 [package]
 name = "oclean"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "Process-cleanup wrapper for opencode sessions"
 license = "MIT"
